@@ -65,6 +65,13 @@ function setup_gitconfig
 	git config --global include.path ~/.gitconfig.local
 		and git config --global dotfiles.managed true
 		or abort 'failed to setup git'
+
+	if test "$managed" = "true"
+		while string match -q -r '^(y|Y)$' (read -l -P 'Add folder specific .gitconfig? Y/n:' -n 1)
+			read -l -P 'Enter folder path: ' folder_path
+			git config --global includeIf."gitdir:$folder_path".path "$folder_path.gitconfig"
+		end
+	end
 end
 
 function link_file -d "links a file keeping a backup"
